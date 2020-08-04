@@ -4,15 +4,15 @@ namespace Robin7331\PdfExtractor;
 
 use Intervention\Image\ImageManager;
 use Robin7331\PdfExtractor\Exceptions\PageOutOfBounds;
-use Robin7331\PdfExtractor\Exceptions\PdfDoesNotExist;
-use Smalot\PdfParser\Parser;
+use Robin7331\PdfExtractor\Exceptions\FileDoesNotExist;
 use Imagick;
+use Spatie\PdfToText\Pdf;
+use SQLite3;
 
 class Extractor
 {
 
     protected $pdfPath;
-    protected $parser;
     protected $pdf;
     protected $imagick;
     protected $pageCount;
@@ -22,16 +22,17 @@ class Extractor
 
 
     /**
-     * Parses a PDF file at a given file path.
+     * Loads a PDF file from a given file path.
      *
      * @param String $file
-     * @throws PdfDoesNotExist
+     * @return Extractor
+     * @throws FileDoesNotExist
      */
-    public function parse(string $file)
+    public function load(string $file)
     {
 
         if (!file_exists($file)) {
-            throw new PdfDoesNotExist("File `{$file}` does not exist");
+            throw new FileDoesNotExist("File `{$file}` does not exist");
         }
 
         // Store the filepath. (Will later be used to determine f.ex. a storage path for images)
@@ -44,9 +45,9 @@ class Extractor
         // Store the page count of the current PDF file.
         $this->pageCount = $this->imagick->getNumberImages();
 
-        // Create the PdfParser object and parse the actual PDF. (This might take some time!)
-        $this->parser = new Parser();
-        $this->pdf = $this->parser->parseFile($file);
+        // Create the Pdf object
+        $this->pdf = new Pdf();
+        $this->pdf->setPdf($file);
 
         // Make this call chainable.
         return $this;
@@ -177,14 +178,7 @@ class Extractor
             return;
         }
 
-        // If no storagePath is provided we need to create our own.
-        // By default the folder of the source PDF is used as a base path
-        // with /export/ appended to it.
-        $storagePath = ($storagePath == null) ? dirname($this->pdfPath) . '/export/' : $storagePath;
-
-        // Does the storage path already exist?
-        // If not lets create it..
-        $this->checkPath($storagePath);
+        $storagePath = $this->checkOrCreateStoragePath($storagePath);
 
         $filename = $pageNumber;
 
@@ -213,8 +207,7 @@ class Extractor
      * @throws PageOutOfBounds
      * @throws \ImagickException
      */
-    public
-    function generateThumbnails($storagePath = null, $prefix = null, $suffix = null)
+    public function generateThumbnails($storagePath = null, $prefix = null, $suffix = null)
     {
 
         for ($page = 1; $page <= $this->pageCount; $page++) {
@@ -225,6 +218,128 @@ class Extractor
             $this->storeThumbnail($thumbnail, $page, $storagePath, $prefix, $suffix);
         }
 
+    }
+
+
+    /**
+     * Returns the text of a single page.
+     *
+     * @param int $page
+     * @return String
+     * @throws PageOutOfBounds
+     */
+    public function getTextOfPage($page = 1)
+    {
+
+        if ($page > $this->pageCount) {
+            throw new PageOutOfBounds("Page `{$page}` is beyond the last page the end of this PDF. Total page count is `{$this->pageCount}`");
+        }
+
+        if ($page < 1) {
+            throw new PageOutOfBounds("Page `{$page}` is not a valid page number.");
+        }
+
+        return $this->pdf->setOptions(["f {$page}", "l {$page}"])->text();
+    }
+
+
+    /**
+     * Returns an array containing the text of one page per item.
+     *
+     * @return Page[]
+     * @throws PageOutOfBounds
+     */
+    public function getTextOfAllPages()
+    {
+        $pages = [];
+
+        for ($page = 1; $page <= $this->pageCount; $page++) {
+
+            // Get the text for this page.
+            $text = $this->getTextOfPage($page);
+
+            $pages[] = new Page($page, $text);
+        }
+
+        return $pages;
+    }
+
+
+    /**
+     * This generates an optimized SQLite database storage containing the pages and their text contents.
+     * It can be used to do an efficient full-text search.
+     * It uses an FTS4 table for optimal performance.
+     * More info: https://sqlite.org/fts3.html
+     *
+     * @param String $storagePath
+     * @param String $filename
+     * @param string $tableName
+     * @throws PageOutOfBounds
+     */
+    public function generateTextDatabase($storagePath = null, $filename = null, $tableName = "pages")
+    {
+
+        // Generate a full path with the given storage path and filename.
+        $storagePath = $this->checkOrCreateStoragePath($storagePath, $filename ?? "database.sqlite");
+
+        $db = new SQLite3($storagePath);
+        $db->enableExceptions(true);
+
+        try {
+            $db->exec("DROP TABLE {$tableName}");
+        } catch (\Exception $e) {}
+
+        try {
+            $db->exec("CREATE VIRTUAL TABLE {$tableName} USING fts4(page, body);");
+        } catch (\Exception $e) {}
+
+        // This will return an array full of Page objects.
+        $pages = $this->getTextOfAllPages();
+
+        foreach ($pages as $page) {
+            try {
+                $db->query("INSERT INTO {$tableName}(page, body) VALUES($page->number, '{$page->text}');");
+            } catch (\Exception $e) {
+                echo "There was a problem storing the contents of page {$page->number}\n";
+                echo $e->getMessage();
+                echo "\n\n\n";
+            }
+
+        }
+    }
+
+
+    /**
+     * Checks if a given storage path is valid.
+     * If not it generates a path based on the PDF path.
+     *
+     * @param String $storagePath
+     * @param String $filename
+     * @return string
+     */
+    private function checkOrCreateStoragePath($storagePath = null, $filename = null)
+    {
+        // If no databaseFilepath is provided we need to create our own.
+        // By default the folder of the source PDF is used as a base path
+        // with /export/ appended to it.
+        $storagePath = ($storagePath == null) ? dirname($this->pdfPath) . '/export' : $storagePath;
+
+        // remove any trailing slash if present so we have known string.
+        $storagePath = rtrim($storagePath, '/');
+
+        // Now we know we have exactly one trailing slash :)
+        $storagePath = $storagePath . "/";
+
+        // Does the storage path already exist?
+        // If not lets create it..
+        $this->checkPath($storagePath);
+
+        // Did we provide a filename?
+        if ($filename != null) {
+            $storagePath = $storagePath . $filename;
+        }
+
+        return $storagePath;
     }
 
     /**
@@ -238,12 +353,5 @@ class Extractor
             mkdir($path);
         }
     }
-
-    // WiP
-    public function getPages()
-    {
-        return $this->pdf->getPages();
-    }
-
 
 }
