@@ -63,6 +63,12 @@ $extractor->generateTextDatabase();
 
 ```
 
+If you have a saved sqlite database you can do full-text queries like for example:
+
+```sqlite
+SELECT*FROM pages WHERE body MATCH "*YOUR_SEARCH_QUERY*"
+```
+
 ### Testing
 
 ``` bash
