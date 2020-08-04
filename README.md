@@ -1,4 +1,4 @@
-# Very short description of the package
+# PDF Extractor
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/robin7331/pdf-extractor.svg?style=flat-square)](https://packagist.org/packages/robin7331/pdf-extractor)
 [![Build Status](https://img.shields.io/travis/robin7331/pdf-extractor/master.svg?style=flat-square)](https://travis-ci.org/robin7331/pdf-extractor)
@@ -8,6 +8,10 @@
 This package lets you generate an SQLite Database used for a full-text search across a PDF document.
 Also it generates thumbnails of every page of the pdf.
 
+This is heavily inspired [spatie/pdf-to-image](https://github.com/spatie/pdf-to-image)   
+and has a dependency of [spatie/pdf-to-text](https://github.com/spatie/pdf-to-text)   
+ 
+  
 ## Installation
 
 You can install the package via composer:
@@ -23,11 +27,40 @@ brew install imagemagick
 pecl install imagick
 ```
 
-If there are any errors I suggest [reading through this guide](https://medium.com/@girishkr/install-imagick-on-macos-catalina-php-7-3-64b4e8542ba2)
-## Usage
+> If there are any errors with imagemagic I suggest [reading through this guide](https://medium.com/@girishkr/install-imagick-on-macos-catalina-php-7-3-64b4e8542ba2)
+   
+Also, behind the scenes this package leverages [pdftotext](https://en.wikipedia.org/wiki/Pdftotext). 
+On a mac you can install the binary using brew
 
+```bash
+brew install poppler
+```
+
+## Usage
+examples/extract_pdf_data.php
 ``` php
-// Usage description here
+<?php
+
+namespace Robin7331\PdfExtractor\Examples;
+
+use Robin7331\PdfExtractor\Extractor;
+
+require 'vendor/autoload.php';
+
+// Load PDF
+$extractor = new Extractor();
+$extractor->load('/path/to/a/pdf/file.pdf');
+
+// Generate thumbnails
+$extractor
+    ->setMaxThumbnailHeight(600)
+    ->setMaxThumbnailWidth(480)
+    ->setQuality(75)
+    ->generateThumbnails();
+
+// Store Fulltext infos
+$extractor->generateTextDatabase();
+
 ```
 
 ### Testing
