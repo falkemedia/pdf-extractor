@@ -5,8 +5,10 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/robin7331/pdf-extractor.svg?style=flat-square)](https://scrutinizer-ci.com/g/robin7331/pdf-extractor)
 [![Total Downloads](https://img.shields.io/packagist/dt/robin7331/pdf-extractor.svg?style=flat-square)](https://packagist.org/packages/robin7331/pdf-extractor)
 
-This package lets you generate an SQLite Database used for a full-text search across a PDF document.
-Also it generates thumbnails of every page of the pdf.
+This package automates the generation of an SQLite database that you can use to do a full-text search on a PDF.
+Meaning you take your PDF, use this tool to generate a database and then query the database and not the PDF for any text search.
+
+This tool also generates thumbnails that you can use to display your search results however you like.
 
 This is heavily inspired [spatie/pdf-to-image](https://github.com/spatie/pdf-to-image)   
 and has a dependency of [spatie/pdf-to-text](https://github.com/spatie/pdf-to-text)   

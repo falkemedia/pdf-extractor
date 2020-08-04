@@ -1,9 +1,11 @@
 {
     "name": "robin7331/pdf-extractor",
-    "description": "",
+    "description": "This package automates the generation of an SQLite database that you can use to do a full-text search on a PDF.",
     "keywords": [
         "robin7331",
-        "pdf-extractor"
+        "pdf-extractor",
+        "pdf",
+        "parse"
     ],
     "homepage": "https://github.com/robin7331/pdf-extractor",
     "license": "MIT",
