@@ -1,8 +1,6 @@
 # PDF Extractor
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/robin7331/pdf-extractor.svg?style=flat-square)](https://packagist.org/packages/robin7331/pdf-extractor)
-[![Build Status](https://img.shields.io/travis/robin7331/pdf-extractor/master.svg?style=flat-square)](https://travis-ci.org/robin7331/pdf-extractor)
-[![Quality Score](https://img.shields.io/scrutinizer/g/robin7331/pdf-extractor.svg?style=flat-square)](https://scrutinizer-ci.com/g/robin7331/pdf-extractor)
 [![Total Downloads](https://img.shields.io/packagist/dt/robin7331/pdf-extractor.svg?style=flat-square)](https://packagist.org/packages/robin7331/pdf-extractor)
 
 This package automates the generation of an SQLite database that you can use to do a full-text search on a PDF.
