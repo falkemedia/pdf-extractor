@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Robin7331\PdfExtractor\Exceptions;
+namespace falkemedia\PdfExtractor\Exceptions;
 
 
 class FileDoesNotExist extends \Exception

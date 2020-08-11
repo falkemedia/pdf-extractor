@@ -1,6 +1,6 @@
 <?php
 
-namespace Robin7331\PdfExtractor\Tests;
+namespace falkemedia\PdfExtractor\Tests;
 
 use PHPUnit\Framework\TestCase;
 

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Robin7331\PdfExtractor;
+namespace falkemedia\PdfExtractor;
 
 
 class Page

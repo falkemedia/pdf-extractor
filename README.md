@@ -1,7 +1,7 @@
 # PDF Extractor
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/robin7331/pdf-extractor.svg?style=flat-square)](https://packagist.org/packages/robin7331/pdf-extractor)
-[![Total Downloads](https://img.shields.io/packagist/dt/robin7331/pdf-extractor.svg?style=flat-square)](https://packagist.org/packages/robin7331/pdf-extractor)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/falkemedia/pdf-extractor.svg?style=flat-square)](https://packagist.org/packages/falkemedia/pdf-extractor)
+[![Total Downloads](https://img.shields.io/packagist/dt/falkemedia/pdf-extractor.svg?style=flat-square)](https://packagist.org/packages/falkemedia/pdf-extractor)
 
 This package automates the generation of an SQLite database that you can use to do a full-text search on a PDF.
 Meaning you take your PDF, use this tool to generate a database and then query the database and not the PDF for any text search.
@@ -17,7 +17,7 @@ and has a dependency of [spatie/pdf-to-text](https://github.com/spatie/pdf-to-te
 You can install the package via composer:
 
 ```bash
-composer require robin7331/pdf-extractor
+composer require falkemedia/pdf-extractor
 ```
 This package requires the installation of ImageMagic and the **imagick** php extension.   
 Instructions for macOS Catalina + PHP 7.3:   
@@ -41,9 +41,9 @@ examples/extract_pdf_data.php
 ``` php
 <?php
 
-namespace Robin7331\PdfExtractor\Examples;
+namespace falkemedia\PdfExtractor\Examples;
 
-use Robin7331\PdfExtractor\Extractor;
+use falkemedia\PdfExtractor\Extractor;
 
 require 'vendor/autoload.php';
 
@@ -85,10 +85,11 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ### Security
 
-If you discover any security related issues, please email robin7331@gmail.com instead of using the issue tracker.
+If you discover any security related issues, please email tg@falkemedia.de instead of using the issue tracker.
 
 ## Credits
 
+- [falkemedia](https://github.com/falkemedia)
 - [Robin Reiter](https://github.com/robin7331)
 - [All Contributors](../../contributors)
 

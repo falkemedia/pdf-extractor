@@ -1,10 +1,10 @@
 <?php
 
-namespace Robin7331\PdfExtractor;
+namespace falkemedia\PdfExtractor;
 
 use Intervention\Image\ImageManager;
-use Robin7331\PdfExtractor\Exceptions\PageOutOfBounds;
-use Robin7331\PdfExtractor\Exceptions\FileDoesNotExist;
+use falkemedia\PdfExtractor\Exceptions\PageOutOfBounds;
+use falkemedia\PdfExtractor\Exceptions\FileDoesNotExist;
 use Imagick;
 use Spatie\PdfToText\Pdf;
 use SQLite3;

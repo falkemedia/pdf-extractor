@@ -1,8 +1,8 @@
 <?php
 
-namespace Robin7331\PdfExtractor\Examples;
+namespace falkemedia\PdfExtractor\Examples;
 
-use Robin7331\PdfExtractor\Extractor;
+use falkemedia\PdfExtractor\Extractor;
 
 require 'vendor/autoload.php';
 

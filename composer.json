@@ -1,19 +1,19 @@
 {
-    "name": "robin7331/pdf-extractor",
+    "name": "falkemedia/pdf-extractor",
     "description": "This package automates the generation of an SQLite database that you can use to do a full-text search on a PDF.",
     "keywords": [
-        "robin7331",
+        "falkemedia",
         "pdf-extractor",
         "pdf",
         "parse"
     ],
-    "homepage": "https://github.com/robin7331/pdf-extractor",
+    "homepage": "https://github.com/falkemedia/pdf-extractor",
     "license": "MIT",
     "type": "library",
     "authors": [
         {
             "name": "Robin Reiter",
-            "email": "robin7331@gmail.com",
+            "email": "r.reiter@falkemedia.de",
             "role": "Developer"
         }
     ],
@@ -30,12 +30,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Robin7331\\PdfExtractor\\": "src"
+            "falkemedia\\PdfExtractor\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Robin7331\\PdfExtractor\\Tests\\": "tests"
+            "falkemedia\\PdfExtractor\\Tests\\": "tests"
         }
     },
     "scripts": {
