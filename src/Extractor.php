@@ -2,6 +2,7 @@
 
 namespace falkemedia\PdfExtractor;
 
+use falkemedia\PdfExtractor\Exceptions\BinaryNotFound;
 use Intervention\Image\ImageManager;
 use falkemedia\PdfExtractor\Exceptions\PageOutOfBounds;
 use falkemedia\PdfExtractor\Exceptions\FileDoesNotExist;
@@ -20,6 +21,16 @@ class Extractor
     protected $maxThumbnailWidth, $maxThumbnailHeight;
     protected $quality = 90;
 
+    private function generatePdfToTextBinPath()
+    {
+        $path = exec('which pdftotext');
+
+        if (empty($path)) {
+            throw new BinaryNotFound("Could not find the `pdftotext` binary on your system.");
+        }
+
+        return $path;
+    }
 
     /**
      * Loads a PDF file from a given file path.
@@ -46,7 +57,7 @@ class Extractor
         $this->pageCount = $this->imagick->getNumberImages();
 
         // Create the Pdf object
-        $this->pdf = new Pdf();
+        $this->pdf = new Pdf($this->generatePdfToTextBinPath());
         $this->pdf->setPdf($file);
 
         // Make this call chainable.

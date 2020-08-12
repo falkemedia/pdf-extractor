@@ -22,7 +22,7 @@
         "ext-imagick": "*",
         "ext-sqlite3": "*",
         "intervention/image": "^2.5",
-        "spatie/pdf-to-text": "dev-dynamically-find-pdftotext-binary"
+        "spatie/pdf-to-text": "^1.3.0"
 
     },
     "require-dev": {
@@ -45,11 +45,5 @@
     },
     "config": {
         "sort-packages": true
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/robin7331/pdf-to-text"
-        }
-    ]
+    }
 }
